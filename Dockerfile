@@ -12,10 +12,12 @@ COPY studentos_v20_patch_01.b64 /tmp/v20_01.b64
 COPY studentos_v20_patch_02.b64 /tmp/v20_02.b64
 COPY studentos_v20_patch_03.b64 /tmp/v20_03.b64
 COPY studentos_v20_patch_04.b64 /tmp/v20_04.b64
+COPY studentos_v20_copyfix.patch /tmp/studentos_v20_copyfix.patch
 RUN cat /tmp/v20_00.b64 /tmp/v20_01.b64 /tmp/v20_02.b64 /tmp/v20_03.b64 /tmp/v20_04.b64 \
     | base64 -d | gunzip > /tmp/studentos_v20.patch \
     && patch -p1 -d /app < /tmp/studentos_v20.patch \
-    && rm /tmp/v20_*.b64 /tmp/studentos_v20.patch
+    && patch -p1 -d /app < /tmp/studentos_v20_copyfix.patch \
+    && rm /tmp/v20_*.b64 /tmp/studentos_v20.patch /tmp/studentos_v20_copyfix.patch
 
 RUN npm install --omit=dev
 
