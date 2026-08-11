@@ -1,0 +1,44 @@
+--- a/index.html
++++ b/index.html
+@@ -144,7 +144,7 @@
+       <article class="pricing-card plus featured">
+         <div class="popular-pill">MEEST GEKOZEN</div>
+         <div class="pricing-plan"><span>PLUS</span><h3>StudentOS Plus</h3><p>Voor leerlingen en studenten die vaker creëren.</p></div>
+-        <div class="pricing-price"><strong>$9.98</strong><small>/ maand</small></div>
++        <div class="pricing-price"><strong>$9.99</strong><small>/ maand</small></div>
+         <ul>
+           <li>✓ Alles uit Free</li><li>✓ Research met webbronnen</li><li>✓ Presentation Builder</li>
+           <li>✓ Research-first verslagen</li><li>✓ Poster Designer</li><li>✓ 350 AI-tekstverzoeken per dag</li><li>✓ 25 AI-afbeeldingen per dag</li>
+@@ -153,7 +153,7 @@
+       </article>
+       <article class="pricing-card pro">
+         <div class="pricing-plan"><span>PRO</span><h3>StudentOS Pro</h3><p>Voor intensief gebruik en maximale AI-kwaliteit.</p></div>
+-        <div class="pricing-price"><strong>$17.98</strong><small>/ maand</small></div>
++        <div class="pricing-price"><strong>$14.99</strong><small>/ maand</small></div>
+         <ul>
+           <li>✓ Alles uit Plus</li><li>✓ Hoogste StudentOS AI-model</li><li>✓ Geavanceerde Studio-workflows</li>
+           <li>✓ Ruimere limieten voor power users</li><li>✓ 1.000 AI-tekstverzoeken per dag</li><li>✓ 60 AI-afbeeldingen per dag</li>
+@@ -1107,8 +1107,8 @@
+       <h3 id="upgradeTitle">Meer uit StudentOS halen?</h3>
+       <p id="upgradeMessage">Kies het plan dat bij jouw gebruik past.</p>
+       <div class="upgrade-options">
+-        <button class="upgrade-option active" data-upgrade-plan="plus"><span><small>PLUS</small><strong>StudentOS Plus</strong></span><b>$9.98/mnd</b></button>
+-        <button class="upgrade-option" data-upgrade-plan="pro"><span><small>PRO</small><strong>StudentOS Pro</strong></span><b>$17.98/mnd</b></button>
++        <button class="upgrade-option active" data-upgrade-plan="plus"><span><small>PLUS</small><strong>StudentOS Plus</strong></span><b>$9.99/mnd</b></button>
++        <button class="upgrade-option" data-upgrade-plan="pro"><span><small>PRO</small><strong>StudentOS Pro</strong></span><b>$14.99/mnd</b></button>
+       </div>
+       <div id="upgradeFeatureList" class="upgrade-feature-list"><span>✓ Research met bronnen</span><span>✓ Presentaties & verslagen</span><span>✓ Poster Designer</span><span>✓ Hogere AI-limieten</span></div>
+       <label class="check-row payment-confirm"><input id="adultPaymentConfirm" type="checkbox"> <span>Ik bevestig dat een volwassene (18+) of bevoegde zakelijke rekeninghouder deze betaling uitvoert.</span></label>
+--- a/V19_FREEMIUM.md
++++ b/V19_FREEMIUM.md
+@@ -1,8 +1,8 @@
+ # StudentOS 360 — V19 Freemium
+ 
+ Free: $0 — 100 tekst-AI/dag, 8 images/dag, Tutor, adaptief leren, planner, studiekeuze, Ask AI en Natural Rewrite.
+-Plus: $9.98/maand — 350 tekst-AI/dag, 25 images/dag, Research, Presentaties, Verslagen en Poster Designer.
+-Pro: $17.98/maand — 1.000 tekst-AI/dag, 60 images/dag en hoogste AI-model.
++Plus: $9.99/maand — 350 tekst-AI/dag, 25 images/dag, Research, Presentaties, Verslagen en Poster Designer.
++Pro: $14.99/maand — 1.000 tekst-AI/dag, 60 images/dag en hoogste AI-model.
+ 
+ Modelrouting: Free = GPT-5.6 Luna, Plus = GPT-5.6 Terra, Pro = GPT-5.6 Sol.
+ Checkout is nog niet gekoppeld. Upgrade-knoppen slaan planinteresse op in Supabase.
