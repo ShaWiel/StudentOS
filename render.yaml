@@ -22,6 +22,22 @@ services:
         value: sb_publishable_JClzcmdFxbyiypc--aAuIA_yAd-mswt
       - key: ALLOWED_ORIGINS
         value: https://studentos-360-shawiel-7vsm.onrender.com,https://studentos-360-shawiel.onrender.com
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: OPENAI_ZERO_DATA_RETENTION_CONFIRMED
+        value: "false"
+      - key: PADDLE_ENV
+        value: sandbox
+      - key: PADDLE_API_KEY
+        sync: false
+      - key: PADDLE_CLIENT_TOKEN
+        sync: false
+      - key: PADDLE_WEBHOOK_SECRET
+        sync: false
+      - key: PADDLE_PLUS_PRICE_ID
+        sync: false
+      - key: PADDLE_PRO_PRICE_ID
+        sync: false
       - key: GUEST_DAILY_AI_LIMIT
         value: "25"
       - key: GUEST_DAILY_IMAGE_LIMIT
