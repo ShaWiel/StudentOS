@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: studentos-360-shawiel
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-5.6-terra
+      - key: OPENAI_IMAGE_MODEL
+        value: gpt-image-2
+      - key: SUPABASE_URL
+        value: https://cilyfayvknpfytxthmwh.supabase.co
+      - key: SUPABASE_PUBLISHABLE_KEY
+        value: sb_publishable_JClzcmdFxbyiypc--aAuIA_yAd-mswt
+      - key: ALLOWED_ORIGINS
+        value: https://studentos-360-shawiel.onrender.com
+      - key: GUEST_DAILY_AI_LIMIT
+        value: "25"
+      - key: GUEST_DAILY_IMAGE_LIMIT
+        value: "5"
