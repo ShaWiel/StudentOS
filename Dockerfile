@@ -7,10 +7,10 @@ COPY StudentOS_360_v18_Connected.zip /tmp/studentos.zip
 RUN unzip /tmp/studentos.zip -d /app \
     && rm /tmp/studentos.zip
 
-COPY studentos_v20_consolidated.patch.gz.b64 /tmp/studentos_v20.patch.gz.b64
-RUN base64 -d /tmp/studentos_v20.patch.gz.b64 | gunzip > /tmp/studentos_v20.patch \
+COPY studentos_v20_consolidated.patch.gz.b64 /tmp/studentos_v20.patch.gz
+RUN gzip -dc /tmp/studentos_v20.patch.gz > /tmp/studentos_v20.patch \
     && patch -p1 -d /app < /tmp/studentos_v20.patch \
-    && rm /tmp/studentos_v20.patch.gz.b64 /tmp/studentos_v20.patch
+    && rm /tmp/studentos_v20.patch.gz /tmp/studentos_v20.patch
 
 RUN npm install --omit=dev
 
