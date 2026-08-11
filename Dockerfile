@@ -1,11 +1,16 @@
 FROM node:22-alpine
 
-RUN apk add --no-cache unzip
+RUN apk add --no-cache unzip patch
 WORKDIR /app
 
 COPY StudentOS_360_v18_Connected.zip /tmp/studentos.zip
 RUN unzip /tmp/studentos.zip -d /app \
     && rm /tmp/studentos.zip
+
+COPY studentos_v19.patch.gz.b64 /tmp/studentos_v19.patch.gz.b64
+RUN base64 -d /tmp/studentos_v19.patch.gz.b64 | gunzip > /tmp/studentos_v19.patch \
+    && patch -p1 -d /app < /tmp/studentos_v19.patch \
+    && rm /tmp/studentos_v19.patch.gz.b64 /tmp/studentos_v19.patch
 
 RUN npm install --omit=dev
 
