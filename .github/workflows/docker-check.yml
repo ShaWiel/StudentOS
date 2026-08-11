@@ -1,0 +1,14 @@
+name: StudentOS Docker check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build StudentOS image
+        run: docker build -t studentos-v18 .
