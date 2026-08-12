@@ -1,0 +1,114 @@
+--- a/app.js	2026-08-12 00:38:39.000000000 +0000
++++ b/app.js	2026-08-12 03:22:36.097746190 +0000
+@@ -71,8 +71,11 @@
+   return new Date().toISOString().slice(0,10);
+ }
+ 
+-function init(){
+-  if(profile){
++function init(openApp=false){
++  // The public SCHOLARK homepage is always the first screen on a fresh page load.
++  // Existing StudentOS/SCHOLARK local profile data is preserved for migration,
++  // but it no longer skips the homepage automatically.
++  if(profile && openApp){
+     document.getElementById("onboarding").classList.add("hidden");
+     document.getElementById("app").classList.remove("hidden");
+     loadProfileUI();
+@@ -94,7 +97,7 @@
+   };
+   addActivity("Persoonlijk SCHOLARK-profiel aangemaakt.");
+   saveAll();
+-  init();
++  init(true);
+ });
+ 
+ function loadProfileUI(){
+@@ -379,7 +382,7 @@
+ }
+ 
+ document.getElementById("taskDate").value=todayISO();
+-init();
++init(false);
+ 
+ 
+ /* ===========================
+@@ -2212,13 +2215,15 @@
+    ===================================== */
+ function setAppActiveV14(active){ document.body.classList.toggle('app-active',active); }
+ const initBeforeV14 = init;
+-init = function(){ initBeforeV14(); setAppActiveV14(Boolean(profile)); };
+-setAppActiveV14(Boolean(profile));
++init = function(openApp=false){ initBeforeV14(openApp); setAppActiveV14(Boolean(profile && openApp)); };
++// Never skip the public homepage simply because an older profile exists locally.
++setAppActiveV14(false);
+ 
+ function v14ScrollSetup(){ document.getElementById('profileSetup')?.scrollIntoView({behavior:'smooth',block:'start'}); }
+-['startStudentOSBtn','finalStartBtn','futureStartBtn'].forEach(id=>document.getElementById(id)?.addEventListener('click',v14ScrollSetup));
++function v14StartOrOpen(){ if(profile){ init(true); } else { v14ScrollSetup(); } }
++['startStudentOSBtn','finalStartBtn','futureStartBtn'].forEach(id=>document.getElementById(id)?.addEventListener('click',v14StartOrOpen));
+ document.getElementById('exploreDemoBtn')?.addEventListener('click',()=>document.getElementById('product')?.scrollIntoView({behavior:'smooth'}));
+-document.getElementById('landingLoginBtn')?.addEventListener('click',()=>{ if(profile){setAppActiveV14(true);} else v14ScrollSetup(); });
++document.getElementById('landingLoginBtn')?.addEventListener('click',()=>{ if(profile){ init(true); } else v14ScrollSetup(); });
+ 
+ if('IntersectionObserver' in window){
+   const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');revealObserver.unobserve(entry.target);}}),{threshold:.1});
+--- a/index.html	2026-08-12 01:29:25.000000000 +0000
++++ b/index.html	2026-08-12 03:22:36.098175197 +0000
+@@ -10,12 +10,12 @@
+ <link href="https://fonts.googleapis.com" rel="preconnect"/>
+ <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=League+Spartan:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+-<link href="styles.css" rel="stylesheet">
++<link href="styles.css?v=22.1" rel="stylesheet">
+ </link></head>
+ <body>
+ <div class="topbar">
+ <div class="container topbar-inner">
+-<div class="brand"><img class="brand-mark brand-logo" src="scholark-logo.png" alt="SCHOLARK logo"/><span class="brand-name">SCHOLARK</span></div>
++<div class="brand"><img class="brand-mark brand-logo" src="scholark-logo.png?v=22.1" alt="SCHOLARK logo"/><span class="brand-name">SCHOLARK</span></div>
+ <div class="top-actions"><label class="language-control" title="Taal / Language"><span>🌐</span><select id="languageSelect" class="language-select" aria-label="Language"><option value="nl">Nederlands</option><option value="en">English</option><option value="es">Español</option><option value="pt">Português</option><option value="fr">Français</option></select></label>
+ <span class="connection-badge demo" id="connectionBadge">Demo</span>
+ <button id="authBtn">Inloggen</button>
+@@ -29,7 +29,7 @@
+ <section class="landing" id="onboarding">
+ <div class="landing-bg"><div class="aurora aurora-a"></div><div class="aurora aurora-b"></div><div class="landing-grid"></div></div>
+ <header class="landing-nav container">
+-<div class="landing-brand"><img class="brand-mark brand-logo" src="scholark-logo.png" alt="SCHOLARK logo"/><strong>SCHOLARK</strong><span class="nav-beta">BETA</span></div>
++<div class="landing-brand"><img class="brand-mark brand-logo" src="scholark-logo.png?v=22.1" alt="SCHOLARK logo"/><strong>SCHOLARK</strong><span class="nav-beta">BETA</span></div>
+ <nav><a href="#product">Product</a><a href="#learn">Leren</a><a href="#studio-showcase">Studio AI</a><a href="#future-showcase">Toekomst</a><a href="#pricing">Prijzen</a></nav>
+ <button id="landingLoginBtn">Inloggen</button>
+ </header>
+@@ -159,7 +159,7 @@
+ <div class="setup-copy"><small>JOUW SCHOLARK</small><h2>Een paar vragen.<br/><em>Daarna wordt alles persoonlijk.</em></h2><p>Je kunt dit later altijd aanpassen. Je profiel blijft lokaal beschikbaar en wordt na inloggen ook veilig met je SCHOLARK-cloudaccount gesynchroniseerd.</p><div class="steps"><div><b>01</b><span><strong>Vertel waar je staat</strong><small>Leeftijd en leerfase</small></span></div><div><b>02</b><span><strong>Kies je hoofddoel</strong><small>Leren, kiezen of groeien</small></span></div><div><b>03</b><span><strong>SCHOLARK past zich aan</strong><small>Dashboard, Tutor en oefeningen</small></span></div></div></div>
+ <form class="profile-form premium-form" id="profileForm"><div class="form-intro"><small>Persoonlijke setup</small><h3>Welkom bij SCHOLARK</h3><p>We gebruiken dit om je ervaring slimmer te maken.</p></div><label>Hoe mogen we je noemen?</label><input id="nameInput" placeholder="Bijv. Shakur" required=""/><div class="form-row"><div><label>Leeftijd</label><input id="ageInput" max="100" min="3" placeholder="16" required="" type="number"/></div><div><label>Leerfase</label><select id="stageInput" required=""><option value="">Kies je leerfase</option><option value="peuter">Peuter / kleuter</option><option value="basis">Basisonderwijs</option><option value="voj">VOJ</option><option value="vos">VOS / middelbaar</option><option value="student">Student</option><option value="volwassene">Volwassene</option><option value="senior">Senior</option></select></div></div><label>Wat wil je vooral bereiken?</label><select id="goalInput" required=""><option value="">Kies een doel</option><option value="beter_begrijpen">Leerstof beter begrijpen</option><option value="hogere_cijfers">Mijn resultaten verbeteren</option><option value="studiekeuze">Mijn volgende school/studie kiezen</option><option value="carriere">Ontdekken wat ik later wil worden</option><option value="digitale_skills">Beter worden met computer en ICT</option><option value="werk">Praktische werkvaardigheden ontwikkelen</option></select><label>Welke vakken of onderwerpen zijn belangrijk?</label><input id="subjectsInput" placeholder="Bijv. Wiskunde, Nederlands, Economie"/><button class="cta-main full" type="submit">Maak mijn SCHOLARK <span>→</span></button><small class="privacy-mini">Je profiel blijft lokaal beschikbaar en wordt na inloggen ook naar je beveiligde SCHOLARK-cloudaccount gesynchroniseerd.</small></form>
+ </section>
+-<footer class="landing-footer"><div class="container"><img class="brand-mark brand-logo" src="scholark-logo.png" alt="SCHOLARK logo"/><b>SCHOLARK</b><p>Leren. Maken. Groeien.</p><small>Public Beta • V22 Multilingual • Suriname-first</small><div class="legal-links"><a href="privacy.html">Privacy</a><a href="terms.html">Voorwaarden</a><a href="safety.html">Veiligheid</a><a href="refunds.html">Betalen &amp; terugbetalingen</a></div></div></footer>
++<footer class="landing-footer"><div class="container"><img class="brand-mark brand-logo" src="scholark-logo.png?v=22.1" alt="SCHOLARK logo"/><b>SCHOLARK</b><p>Leren. Maken. Groeien.</p><small>Public Beta • V22 Multilingual • Suriname-first</small><div class="legal-links"><a href="privacy.html">Privacy</a><a href="terms.html">Voorwaarden</a><a href="safety.html">Veiligheid</a><a href="refunds.html">Betalen &amp; terugbetalingen</a></div></div></footer>
+ </section>
+ <section class="app hidden" id="app">
+ <aside class="sidebar">
+@@ -1071,9 +1071,9 @@
+ <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+ <script src="config.js"></script>
+-<script src="app.js"></script>
+-<script src="education-data.js"></script>
+-<script src="education.js"></script>
+-  <script src="i18n.js"></script>
++<script src="app.js?v=22.1"></script>
++<script src="education-data.js?v=22.1"></script>
++<script src="education.js?v=22.1"></script>
++  <script src="i18n.js?v=22.1"></script>
+ </body>
+ </html>
+--- a/backend/server.mjs	2026-08-12 01:29:25.000000000 +0000
++++ b/backend/server.mjs	2026-08-12 03:22:36.098277980 +0000
+@@ -743,7 +743,7 @@
+   }catch(err){console.error("Delete account error",err);res.status(500).json({message:"Account kon niet worden verwijderd."});}
+ });
+ 
+-app.use(express.static(ROOT_DIR,{extensions:["html"],maxAge:process.env.NODE_ENV==="production"?"1h":0}));
++app.use(express.static(ROOT_DIR,{extensions:["html"],maxAge:0,setHeaders:(res)=>res.setHeader("Cache-Control","no-store, max-age=0")}));
+ app.get(/^(?!\/api).*/,(_req,res)=>res.sendFile(path.join(ROOT_DIR,"index.html")));
+ app.use((err,req,res,_next)=>{
+   console.error(`[${req.requestId||"no-id"}]`,err);
